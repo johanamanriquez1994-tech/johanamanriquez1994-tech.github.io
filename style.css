@@ -1,4 +1,4 @@
-/* Reiniciamos los márgenes por defecto del navegador */
+
 * {
     margin: 0;
     padding: 0;
@@ -8,13 +8,13 @@
 body, html {
     width: 100%;
     height: 100%;
-    background-color: #000000; /* Fondo negro absoluto */
-    color: #ffffff; /* Letras blancas */
+    background-color: #000000; 
+    color: #ffffff; 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    overflow: hidden; /* Evita barras de desplazamiento molestas */
+    overflow: hidden; 
 }
 
-/* Capa trasera: Burbujas flotando */
+
 #particles-js {
     position: absolute;
     width: 100%;
@@ -24,7 +24,7 @@ body, html {
     z-index: 1;
 }
 
-/* Capa intermedia: Mariposa 3D */
+
 #mariposa-3d-container {
     position: absolute;
     width: 100%;
@@ -35,7 +35,7 @@ body, html {
     overflow: hidden;
 }
 
-/* Capa delantera: Textos y botones */
+
 .contenido-principal {
     position: relative;
     width: 100%;
@@ -45,10 +45,10 @@ body, html {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    pointer-events: none; /* Permite que el mouse pase "a través" del texto para interactuar con el 3D */
+    pointer-events: none; 
 }
 
-/* Nombre en la esquina superior izquierda */
+
 .menu-superior {
     font-size: 24px;
     font-weight: bold;
@@ -58,14 +58,13 @@ body, html {
     -webkit-text-fill-color: transparent;
 }
 
-/* Bloque central de textos */
 .presentacion {
     max-width: 600px;
     margin-top: auto;
     margin-bottom: auto;
 }
 
-/* Título de bienvenida */
+
 .titulo-gradiente {
     font-size: 48px;
     font-weight: 400;
@@ -73,7 +72,7 @@ body, html {
     margin-bottom: 20px;
 }
 
-/* El efecto de color brillante para "código y diseño" */
+
 .titulo-gradiente span {
     background: linear-gradient(45deg, #a8ff78, #78ffd6, #ff758c);
     -webkit-background-clip: text;
@@ -81,7 +80,7 @@ body, html {
     font-weight: bold;
 }
 
-/* Párrafo descriptivo */
+
 .descripcion {
     font-size: 18px;
     line-height: 1.6;
@@ -89,12 +88,12 @@ body, html {
     margin-bottom: 30px;
 }
 
-/* Botones inferiores */
+
 .botones {
     display: flex;
     gap: 20px;
     align-items: center;
-    pointer-events: auto; /* Activa los clics solo para los botones */
+    pointer-events: auto; 
 }
 
 .btn-cv {

@@ -1,6 +1,4 @@
-/* =========================================================================
-   1. CONFIGURACIÓN DE BURBUJAS DE FONDO (Particles.js)
-   ========================================================================= */
+
 particlesJS("particles-js", {
   "particles": {
     "number": {
@@ -47,9 +45,6 @@ particlesJS("particles-js", {
 });
 
 
-/* =========================================================================
-   2. CONFIGURACIÓN DE LA MARIPOSA 3D (Three.js)
-   ========================================================================= */
 let scene, camera, renderer;
 let alaIzquierda, alaDerecha, cuerpoMariposa;
 const container3D = document.getElementById('mariposa-3d-container');
@@ -73,13 +68,12 @@ function init3D() {
 
     cuerpoMariposa = new THREE.Group();
 
-    // Cuerpo central
     const cuerpoGeo = new THREE.CylinderGeometry(0.03, 0.03, 0.6, 8);
     const cuerpoMat = new THREE.MeshBasicMaterial({ color: 0x111111 });
     const cuerpoMesh = new THREE.Mesh(cuerpoGeo, cuerpoMat);
     cuerpoMariposa.add(cuerpoMesh);
 
-    // Ala Izquierda
+   
     const alaIzquierdaGeo = new THREE.ConeGeometry(0.3, 0.6, 4);
     alaIzquierdaGeo.rotateZ(Math.PI / 2);
     const alaMatIzquierda = new THREE.MeshStandardMaterial({ color: 0x78ffd6, side: THREE.DoubleSide, roughness: 0.2 });
@@ -87,7 +81,7 @@ function init3D() {
     alaIzquierda.position.x = -0.2;
     cuerpoMariposa.add(alaIzquierda);
 
-    // Ala Derecha
+  
     const alaDerechaGeo = new THREE.ConeGeometry(0.3, 0.6, 4);
     alaDerechaGeo.rotateZ(-Math.PI / 2);
     const alaMatDerecha = new THREE.MeshStandardMaterial({ color: 0xff758c, side: THREE.DoubleSide, roughness: 0.2 });
@@ -95,7 +89,7 @@ function init3D() {
     alaDerecha.position.x = 0.2;
     cuerpoMariposa.add(alaDerecha);
 
-    // Reposicionar a la derecha de la pantalla
+  
     cuerpoMariposa.position.set(1.5, 0, 0);
     cuerpoMariposa.rotation.x = 0.3;
     
@@ -131,9 +125,7 @@ window.addEventListener('resize', () => {
 });
 
 
-/* =========================================================================
-   3. EFECTO DE RASTRO DE BURBUJAS DE COLORES AL MOVER EL MOUSE
-   ========================================================================= */
+
 const canvasCursor = document.createElement('canvas');
 const ctx = canvasCursor.getContext('2d');
 document.body.appendChild(canvasCursor);
@@ -196,7 +188,7 @@ function animarRastro() {
         listaBurbujas[i].actualizar();
         listaBurbujas[i].dibujar();
         if (listaBurbujas[i].alpha <= 0 || listaBurbujas[i].size <= 0.2) {
-            listaBurbujas.splice(i, 1); // <-- ¡CORREGIDO AQUÍ!
+            listaBurbujas.splice(i, 1); 
             i--;
         }
     }
