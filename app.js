@@ -17,15 +17,15 @@ particlesJS("particles-js", {
       "anim": { "enable": true, "speed": 0.5, "opacity_min": 0.1, "sync": false }
     },
     "size": {
-      "value": 15,
+      "value": 12,
       "random": true,
-      "anim": { "enable": true, "speed": 2, "size_min": 5, "sync": false }
+      "anim": { "enable": true, "speed": 1, "size_min": 4, "sync": false }
     },
     "line_linked": { "enable": false },
     "move": {
       "enable": true,
       "speed": 1,
-      "direction": "top", /* Suben como burbujas en el agua */
+      "direction": "top", /* Suben como burbujas */
       "random": true,
       "straight": false,
       "out_mode": "out",
@@ -35,7 +35,7 @@ particlesJS("particles-js", {
   "interactivity": {
     "detect_on": "canvas",
     "events": {
-      "onhover": { "enable": true, "mode": "repulse" }, /* El mouse las empuja sutilmente */
+      "onhover": { "enable": true, "mode": "repulse" },
       "onclick": { "enable": false },
       "resize": true
     },
@@ -62,44 +62,42 @@ function init3D() {
 
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(container3D.clientWidth, container3D.clientHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container3D.appendChild(renderer.domElement);
 
-    // Luces de ambiente y de color
     const light = new THREE.AmbientLight(0xffffff, 0.9);
     scene.add(light);
-    const pointLight = new THREE.PointLight(0xff758c, 1);
+    const pointLight = new THREE.PointLight(0xff758c, 1.5);
     pointLight.position.set(2, 2, 2);
     scene.add(pointLight);
 
-    // Contenedor principal para agrupar las partes de la mariposa
     cuerpoMariposa = new THREE.Group();
 
     // Cuerpo central
-    const cuerpoGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.7, 8);
+    const cuerpoGeo = new THREE.CylinderGeometry(0.03, 0.03, 0.6, 8);
     const cuerpoMat = new THREE.MeshBasicMaterial({ color: 0x111111 });
     const cuerpoMesh = new THREE.Mesh(cuerpoGeo, cuerpoMat);
     cuerpoMariposa.add(cuerpoMesh);
 
     // Ala Izquierda
-    const alaIzquierdaGeo = new THREE.ConeGeometry(0.35, 0.7, 3);
+    const alaIzquierdaGeo = new THREE.ConeGeometry(0.3, 0.6, 4);
     alaIzquierdaGeo.rotateZ(Math.PI / 2);
-    const alaMatIzquierda = new THREE.MeshStandardMaterial({ color: 0x78ffd6, side: THREE.DoubleSide, roughness: 0.3 });
+    const alaMatIzquierda = new THREE.MeshStandardMaterial({ color: 0x78ffd6, side: THREE.DoubleSide, roughness: 0.2 });
     alaIzquierda = new THREE.Mesh(alaIzquierdaGeo, alaMatIzquierda);
-    alaIzquierda.position.x = -0.25;
+    alaIzquierda.position.x = -0.2;
     cuerpoMariposa.add(alaIzquierda);
 
     // Ala Derecha
-    const alaDerechaGeo = new THREE.ConeGeometry(0.35, 0.7, 3);
+    const alaDerechaGeo = new THREE.ConeGeometry(0.3, 0.6, 4);
     alaDerechaGeo.rotateZ(-Math.PI / 2);
-    const alaMatDerecha = new THREE.MeshStandardMaterial({ color: 0xff758c, side: THREE.DoubleSide, roughness: 0.3 });
+    const alaMatDerecha = new THREE.MeshStandardMaterial({ color: 0xff758c, side: THREE.DoubleSide, roughness: 0.2 });
     alaDerecha = new THREE.Mesh(alaDerechaGeo, alaMatDerecha);
-    alaDerecha.position.x = 0.25;
+    alaDerecha.position.x = 0.2;
     cuerpoMariposa.add(alaDerecha);
 
-    // Colocar la mariposa a la derecha y rotarla un poco
+    // Reposicionar a la derecha de la pantalla
     cuerpoMariposa.position.set(1.5, 0, 0);
-    cuerpoMariposa.rotation.x = 0.4;
+    cuerpoMariposa.rotation.x = 0.3;
     
     scene.add(cuerpoMariposa);
 }
@@ -109,15 +107,12 @@ function animate3D() {
     const tiempo = Date.now() * 0.005;
 
     if (alaIzquierda && alaDerecha) {
-        // Movimiento rápido de aleteo
-        alaIzquierda.rotation.y = Math.sin(tiempo * 3) * 0.6;
-        alaDerecha.rotation.y = -Math.sin(tiempo * 3) * 0.6;
+        alaIzquierda.rotation.y = Math.sin(tiempo * 4) * 0.6;
+        alaDerecha.rotation.y = -Math.sin(tiempo * 4) * 0.6;
     }
 
     if (cuerpoMariposa) {
-        // Flotación lenta vertical
-        cuerpoMariposa.position.y = Math.sin(tiempo * 0.2) * 0.3;
-        // Rotación continua suave para apreciar el 3D
+        cuerpoMariposa.position.y = Math.sin(tiempo * 0.2) * 0.2;
         cuerpoMariposa.rotation.y = tiempo * 0.1;
     }
 
@@ -127,7 +122,6 @@ function animate3D() {
 init3D();
 animate3D();
 
-// Ajustar si la ventana cambia de tamaño
 window.addEventListener('resize', () => {
     if(container3D && camera && renderer) {
         camera.aspect = container3D.clientWidth / container3D.clientHeight;
@@ -150,7 +144,7 @@ canvasCursor.style.left = '0';
 canvasCursor.style.width = '100vw';
 canvasCursor.style.height = '100vh';
 canvasCursor.style.pointerEvents = 'none';
-canvasCursor.style.zIndex = '4'; // Capa por encima de todo
+canvasCursor.style.zIndex = '4';
 
 let listaBurbujas = [];
 const coloresBurbujas = ["#78ffd6", "#a8ff78", "#ff758c", "#00ffff", "#ff00ff"];
@@ -166,17 +160,17 @@ class BurbujaMouse {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.size = Math.random() * 8 + 4;
-        this.speedX = Math.random() * 2 - 1;
-        this.speedY = Math.random() * -2 - 0.5;
+        this.size = Math.random() * 6 + 4;
+        this.speedX = Math.random() * 1.5 - 0.75;
+        this.speedY = Math.random() * -1.5 - 0.5;
         this.color = coloresBurbujas[Math.floor(Math.random() * coloresBurbujas.length)];
         this.alpha = 1;
     }
     actualizar() {
         this.x += this.speedX;
         this.y += this.speedY;
-        if (this.size > 0.2) this.size -= 0.1;
-        this.alpha -= 0.015;
+        if (this.size > 0.2) this.size -= 0.08;
+        this.alpha -= 0.012;
     }
     dibujar() {
         ctx.save();
@@ -185,7 +179,7 @@ class BurbujaMouse {
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = this.color;
         ctx.fill();
-        ctx.strokeStyle = '#ffffff';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
         ctx.lineWidth = 0.5;
         ctx.stroke();
         ctx.restore();
@@ -193,7 +187,6 @@ class BurbujaMouse {
 }
 
 window.addEventListener('mousemove', function(evento) {
-    listaBurbujas.push(new BurbujaMouse(evento.clientX, evento.clientY));
     listaBurbujas.push(new BurbujaMouse(evento.clientX, evento.clientY));
 });
 
@@ -203,7 +196,7 @@ function animarRastro() {
         listaBurbujas[i].actualizar();
         listaBurbujas[i].dibujar();
         if (listaBurbujas[i].alpha <= 0 || listaBurbujas[i].size <= 0.2) {
-            listaBurbubas = listaBurbujas.splice(i, 1);
+            listaBurbujas.splice(i, 1); // <-- ¡CORREGIDO AQUÍ!
             i--;
         }
     }
