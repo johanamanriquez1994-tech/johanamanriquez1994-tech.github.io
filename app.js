@@ -1,0 +1,212 @@
+/* =========================================================================
+   1. CONFIGURACIÓN DE BURBUJAS DE FONDO (Particles.js)
+   ========================================================================= */
+particlesJS("particles-js", {
+  "particles": {
+    "number": {
+      "value": 40,
+      "density": { "enable": true, "value_area": 800 }
+    },
+    "color": {
+      "value": ["#78ffd6", "#a8ff78", "#ff758c", "#ffffff"]
+    },
+    "shape": { "type": "circle" },
+    "opacity": {
+      "value": 0.3,
+      "random": true,
+      "anim": { "enable": true, "speed": 0.5, "opacity_min": 0.1, "sync": false }
+    },
+    "size": {
+      "value": 15,
+      "random": true,
+      "anim": { "enable": true, "speed": 2, "size_min": 5, "sync": false }
+    },
+    "line_linked": { "enable": false },
+    "move": {
+      "enable": true,
+      "speed": 1,
+      "direction": "top", /* Suben como burbujas en el agua */
+      "random": true,
+      "straight": false,
+      "out_mode": "out",
+      "bounce": false
+    }
+  },
+  "interactivity": {
+    "detect_on": "canvas",
+    "events": {
+      "onhover": { "enable": true, "mode": "repulse" }, /* El mouse las empuja sutilmente */
+      "onclick": { "enable": false },
+      "resize": true
+    },
+    "modes": {
+      "repulse": { "distance": 100, "duration": 0.4 }
+    }
+  },
+  "retina_detect": true
+});
+
+
+/* =========================================================================
+   2. CONFIGURACIÓN DE LA MARIPOSA 3D (Three.js)
+   ========================================================================= */
+let scene, camera, renderer;
+let alaIzquierda, alaDerecha, cuerpoMariposa;
+const container3D = document.getElementById('mariposa-3d-container');
+
+function init3D() {
+    scene = new THREE.Scene();
+
+    camera = new THREE.PerspectiveCamera(45, container3D.clientWidth / container3D.clientHeight, 0.1, 1000);
+    camera.position.set(0, 0, 5);
+
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(container3D.clientWidth, container3D.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container3D.appendChild(renderer.domElement);
+
+    // Luces de ambiente y de color
+    const light = new THREE.AmbientLight(0xffffff, 0.9);
+    scene.add(light);
+    const pointLight = new THREE.PointLight(0xff758c, 1);
+    pointLight.position.set(2, 2, 2);
+    scene.add(pointLight);
+
+    // Contenedor principal para agrupar las partes de la mariposa
+    cuerpoMariposa = new THREE.Group();
+
+    // Cuerpo central
+    const cuerpoGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.7, 8);
+    const cuerpoMat = new THREE.MeshBasicMaterial({ color: 0x111111 });
+    const cuerpoMesh = new THREE.Mesh(cuerpoGeo, cuerpoMat);
+    cuerpoMariposa.add(cuerpoMesh);
+
+    // Ala Izquierda
+    const alaIzquierdaGeo = new THREE.ConeGeometry(0.35, 0.7, 3);
+    alaIzquierdaGeo.rotateZ(Math.PI / 2);
+    const alaMatIzquierda = new THREE.MeshStandardMaterial({ color: 0x78ffd6, side: THREE.DoubleSide, roughness: 0.3 });
+    alaIzquierda = new THREE.Mesh(alaIzquierdaGeo, alaMatIzquierda);
+    alaIzquierda.position.x = -0.25;
+    cuerpoMariposa.add(alaIzquierda);
+
+    // Ala Derecha
+    const alaDerechaGeo = new THREE.ConeGeometry(0.35, 0.7, 3);
+    alaDerechaGeo.rotateZ(-Math.PI / 2);
+    const alaMatDerecha = new THREE.MeshStandardMaterial({ color: 0xff758c, side: THREE.DoubleSide, roughness: 0.3 });
+    alaDerecha = new THREE.Mesh(alaDerechaGeo, alaMatDerecha);
+    alaDerecha.position.x = 0.25;
+    cuerpoMariposa.add(alaDerecha);
+
+    // Colocar la mariposa a la derecha y rotarla un poco
+    cuerpoMariposa.position.set(1.5, 0, 0);
+    cuerpoMariposa.rotation.x = 0.4;
+    
+    scene.add(cuerpoMariposa);
+}
+
+function animate3D() {
+    requestAnimationFrame(animate3D);
+    const tiempo = Date.now() * 0.005;
+
+    if (alaIzquierda && alaDerecha) {
+        // Movimiento rápido de aleteo
+        alaIzquierda.rotation.y = Math.sin(tiempo * 3) * 0.6;
+        alaDerecha.rotation.y = -Math.sin(tiempo * 3) * 0.6;
+    }
+
+    if (cuerpoMariposa) {
+        // Flotación lenta vertical
+        cuerpoMariposa.position.y = Math.sin(tiempo * 0.2) * 0.3;
+        // Rotación continua suave para apreciar el 3D
+        cuerpoMariposa.rotation.y = tiempo * 0.1;
+    }
+
+    renderer.render(scene, camera);
+}
+
+init3D();
+animate3D();
+
+// Ajustar si la ventana cambia de tamaño
+window.addEventListener('resize', () => {
+    if(container3D && camera && renderer) {
+        camera.aspect = container3D.clientWidth / container3D.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container3D.clientWidth, container3D.clientHeight);
+    }
+});
+
+
+/* =========================================================================
+   3. EFECTO DE RASTRO DE BURBUJAS DE COLORES AL MOVER EL MOUSE
+   ========================================================================= */
+const canvasCursor = document.createElement('canvas');
+const ctx = canvasCursor.getContext('2d');
+document.body.appendChild(canvasCursor);
+
+canvasCursor.style.position = 'fixed';
+canvasCursor.style.top = '0';
+canvasCursor.style.left = '0';
+canvasCursor.style.width = '100vw';
+canvasCursor.style.height = '100vh';
+canvasCursor.style.pointerEvents = 'none';
+canvasCursor.style.zIndex = '4'; // Capa por encima de todo
+
+let listaBurbujas = [];
+const coloresBurbujas = ["#78ffd6", "#a8ff78", "#ff758c", "#00ffff", "#ff00ff"];
+
+function redimensionarCanvas() {
+    canvasCursor.width = window.innerWidth;
+    canvasCursor.height = window.innerHeight;
+}
+window.addEventListener('resize', redimensionarCanvas);
+redimensionarCanvas();
+
+class BurbujaMouse {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = Math.random() * 8 + 4;
+        this.speedX = Math.random() * 2 - 1;
+        this.speedY = Math.random() * -2 - 0.5;
+        this.color = coloresBurbujas[Math.floor(Math.random() * coloresBurbujas.length)];
+        this.alpha = 1;
+    }
+    actualizar() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.size > 0.2) this.size -= 0.1;
+        this.alpha -= 0.015;
+    }
+    dibujar() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+        ctx.restore();
+    }
+}
+
+window.addEventListener('mousemove', function(evento) {
+    listaBurbujas.push(new BurbujaMouse(evento.clientX, evento.clientY));
+    listaBurbujas.push(new BurbujaMouse(evento.clientX, evento.clientY));
+});
+
+function animarRastro() {
+    ctx.clearRect(0, 0, canvasCursor.width, canvasCursor.height);
+    for (let i = 0; i < listaBurbujas.length; i++) {
+        listaBurbujas[i].actualizar();
+        listaBurbujas[i].dibujar();
+        if (listaBurbujas[i].alpha <= 0 || listaBurbujas[i].size <= 0.2) {
+            listaBurbubas = listaBurbujas.splice(i, 1);
+            i--;
+        }
+    }
+    requestAnimationFrame(animarRastro);
+}
+animarRastro();
