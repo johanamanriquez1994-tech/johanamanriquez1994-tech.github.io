@@ -1,122 +1,94 @@
-
-* {
+/* Estilos generales del Portafolio */
+body {
     margin: 0;
     padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #ffffff;
+    overflow-x: hidden;
+    background-color: transparent; /* Permite ver el canvas de app.js */
+}
+
+header {
+    padding: 20px 50px;
+    font-size: 24px;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
     box-sizing: border-box;
 }
 
-body, html {
-    width: 100%;
-    height: 100%;
-    background-color: #000000; 
-    color: #ffffff; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    overflow: hidden; 
-}
-
-
-#particles-js {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 1;
-}
-
-
-#mariposa-3d-container {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 2;
-    overflow: hidden;
-}
-
-
-.contenido-principal {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    z-index: 3;
-    padding: 40px 80px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    pointer-events: none; 
-}
-
-
-.menu-superior {
-    font-size: 24px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    background: linear-gradient(45deg, #ffffff, #a8ff78);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
 .presentacion {
-    max-width: 600px;
-    margin-top: auto;
-    margin-bottom: auto;
+    max-width: 800px;
+    margin: 180px auto 50px auto;
+    padding: 0 20px;
+    text-align: left;
+    position: relative;
+    z-index: 5;
 }
-
 
 .titulo-gradiente {
-    font-size: 48px;
-    font-weight: 400;
-    line-height: 1.2;
-    margin-bottom: 20px;
+    font-size: 64px;
+    line-height: 1.1;
+    margin-bottom: 30px;
+    font-weight: 800;
 }
-
 
 .titulo-gradiente span {
-    background: linear-gradient(45deg, #a8ff78, #78ffd6, #ff758c);
+    background: linear-gradient(45deg, #a8ff78, #78ffd6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-weight: bold;
 }
-
 
 .descripcion {
     font-size: 18px;
     line-height: 1.6;
-    opacity: 0.8;
-    margin-bottom: 30px;
+    color: #e0e0e0;
+    margin-bottom: 40px;
 }
 
+.descripcion strong {
+    color: #78ffd6;
+}
 
+/* Diseño de los Botones Elegantes */
 .botones {
     display: flex;
     gap: 20px;
     align-items: center;
-    pointer-events: auto; 
 }
 
-.btn-cv {
-    border: 1px solid #ffffff;
-    color: #ffffff;
-    padding: 10px 25px;
-    text-decoration: none;
-    font-size: 14px;
-    transition: 0.3s;
-}
-
-.btn-cv:hover {
+.btn {
+    display: inline-block;
+    padding: 12px 30px;
     background-color: #ffffff;
     color: #000000;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 5px;
+    transition: all 0.3s ease;
 }
 
-.btn-contacto {
+.btn:hover {
+    background-color: #78ffd6;
+    box-shadow: 0 0 15px rgba(120, 255, 214, 0.4);
+}
+
+.btn-secundario {
+    display: inline-block;
     color: #ffffff;
     text-decoration: none;
-    font-size: 14px;
-    opacity: 0.7;
+    font-weight: 600;
+    border-bottom: 2px solid transparent;
+    padding: 5px 0;
+    transition: all 0.3s ease;
 }
 
-.btn-contacto:hover {
-    opacity: 1;
+.btn-secundario:hover {
+    color: #78ffd6;
+    border-bottom: 2px solid #78ffd6;
 }
