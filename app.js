@@ -1,15 +1,15 @@
-
+// === Creación del lienzo de dibujo (Canvas) ===
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 document.body.appendChild(canvas);
 
-
+// Estilos para el fondo infinito negro (No tocar)
 canvas.style.position = 'fixed';
 canvas.style.top = '0';
 canvas.style.left = '0';
 canvas.style.width = '100%';
 canvas.style.height = '100%';
-canvas.style.zIndex = '-1';
+canvas.style.zIndex = '-1'; // Asegura que las burbujas y la mariposa estén detrás del texto
 canvas.style.backgroundColor = '#000000';
 
 let burbujas = [];
@@ -21,7 +21,7 @@ function ajustarPantalla() {
 window.addEventListener('resize', ajustarPantalla);
 ajustarPantalla();
 
-
+// === CLASE BURBUJA (No tocar) ===
 class Burbuja {
     constructor(x, y, esInteractiva = false) {
         this.x = x;
@@ -84,18 +84,27 @@ window.addEventListener('mousemove', (evento) => {
 });
 
 
+// === CLASE MARIPOSA (Ajustada para mayor tamaño y profundidad) ===
 class Mariposa {
     constructor() {
         this.reiniciar();
     }
 
     reiniciar() {
-        this.x = -50;
+        // --- 1. AJUSTE DE TAMAÑO ---
+        // Aumentamos el rango de escala de [0.6 - 1.0] a [1.0 - 1.5] (Súper grande)
+        this.escala = Math.random() * 0.5 + 1.0; 
+
+        // Posición de inicio y velocidad (Sin cambios)
+        this.x = -150; // Empezamos un poco más afuera por su nuevo tamaño
         this.y = Math.random() * (canvas.height * 0.6) + (canvas.height * 0.2);
         this.velocidadX = Math.random() * 1.5 + 1.5;
         this.anguloAleteo = 0;
         this.tiempoX = Math.random() * 100;
-        this.escala = Math.random() * 0.4 + 0.6;
+        
+        // --- 2. EFECTO 3D (Simulación de profundidad) ---
+        // La opacidad dependerá de la escala: más grande = más "cerca" = más opaca
+        this.baseOpacidad = this.escala > 1.2 ? 0.9 : 0.6;
     }
 
     actualizar() {
@@ -104,7 +113,8 @@ class Mariposa {
         this.y += Math.sin(this.tiempoX) * 1.2; // Vuelo ondulado real
         this.anguloAleteo += 0.25;
 
-        if (this.x - 60 > canvas.width) {
+        // Reiniciar cuando cruza
+        if (this.x - 100 > canvas.width) {
             this.reiniciar();
         }
     }
@@ -114,13 +124,15 @@ class Mariposa {
         ctx.translate(this.x, this.y);
         ctx.scale(this.escala, this.escala);
 
+        // Ancho de ala dinámico para aleteo
         let anchoAla = Math.abs(Math.sin(this.anguloAleteo)) * 25 + 5;
 
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.75)";
-        ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+        // --- 3. ESTILOS DE CRISTAL (Ajustados con la opacidad de profundidad) ---
+        ctx.strokeStyle = `rgba(255, 255, 255, ${this.baseOpacidad})`; // Bordes más nítidos
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.baseOpacidad * 0.1})`; // Relleno de cristal
         ctx.lineWidth = 2;
 
-       
+        // Ala Izquierda
         ctx.beginPath();
         ctx.moveTo(0, 0);
         ctx.bezierCurveTo(-anchoAla, -30, -anchoAla * 1.5, -10, 0, 5);
@@ -128,7 +140,7 @@ class Mariposa {
         ctx.fill();
         ctx.stroke();
 
-       
+        // Ala Derecha
         ctx.beginPath();
         ctx.moveTo(0, 0);
         ctx.bezierCurveTo(anchoAla, -30, anchoAla * 1.5, -10, 0, 5);
@@ -136,11 +148,11 @@ class Mariposa {
         ctx.fill();
         ctx.stroke();
 
-        
+        // Cuerpo (Más nítido)
         ctx.beginPath();
         ctx.moveTo(0, -15);
         ctx.lineTo(0, 15);
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.9)";
+        ctx.strokeStyle = `rgba(255, 255, 255, ${this.baseOpacidad * 1.1})`; // Un toque más brillante
         ctx.lineWidth = 3;
         ctx.stroke();
 
@@ -151,10 +163,10 @@ class Mariposa {
 const mariposa = new Mariposa();
 
 
+// === BUCLE DE ANIMACIÓN (No tocar) ===
 function animar() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // 1. Burbujas
     generarBurbujasDeFondo();
     for (let i = burbujas.length - 1; i >= 0; i--) {
         burbujas[i].actualizar();
@@ -165,7 +177,6 @@ function animar() {
         }
     }
 
-    // 2. Mariposa
     mariposa.actualizar();
     mariposa.dibujar();
 
