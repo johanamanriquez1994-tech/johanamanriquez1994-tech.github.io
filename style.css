@@ -1,21 +1,96 @@
-/* --- AJUSTE GENERAL DEL BODY --- */
+/* Estilos generales del Portafolio */
 body {
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #ffffff;
-    overflow-x: hidden; /* Evita scrolls raros con la mariposa grande */
-    background-color: transparent;
+    overflow-x: hidden;
+    background-color: transparent; /* Importante para ver el fondo animado */
 }
 
-/* --- AJUSTE DE LA SECCIÓN DE TEXTO (Alineación a la izquierda) --- */
+header {
+    padding: 20px 50px;
+    font-size: 24px;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    box-sizing: border-box;
+}
+
+/* UBICACIÓN: Alineado completamente al costado izquierdo */
 .presentacion {
-    max-width: 600px; /* Reducimos el ancho máximo para contener el texto en la izquierda */
-    margin: 180px 0 50px 8%; /* Lo pegamos a la izquierda con un 8% de margen */
+    max-width: 550px !important;
+    margin: 160px 0 50px 6% !important;
     padding: 0 20px;
-    text-align: left; /* Aseguramos que TODO esté alineado a la izquierda */
+    text-align: left !important;
     position: relative;
     z-index: 5;
 }
 
-/* El resto de los estilos del CSS (header, botones, etc.) se mantienen igual */
+.titulo-gradiente {
+    font-size: 54px;
+    line-height: 1.1;
+    margin-bottom: 25px;
+    font-weight: 800;
+}
+
+.titulo-gradiente span {
+    background: linear-gradient(45deg, #a8ff78, #78ffd6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.descripcion {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #e0e0e0;
+    margin-bottom: 20px;
+}
+
+.descripcion strong {
+    color: #78ffd6;
+}
+
+/* Botones estructurados a la izquierda */
+.botones {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #ffffff;
+    color: #000000;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #78ffd6;
+    box-shadow: 0 0 15px rgba(120, 255, 214, 0.4);
+}
+
+.btn-secundario {
+    display: inline-block;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 2px solid transparent;
+    padding: 5px 0;
+    transition: all 0.3s ease;
+}
+
+.btn-secundario:hover {
+    color: #78ffd6;
+    border-bottom: 2px solid #78ffd6;
+}

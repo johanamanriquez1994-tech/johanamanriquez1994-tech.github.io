@@ -1,15 +1,13 @@
-// === Creación del lienzo de dibujo (Canvas) ===
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 document.body.appendChild(canvas);
 
-// Estilos para el fondo infinito negro (No tocar)
 canvas.style.position = 'fixed';
 canvas.style.top = '0';
 canvas.style.left = '0';
 canvas.style.width = '100%';
 canvas.style.height = '100%';
-canvas.style.zIndex = '-1'; // Asegura que las burbujas y la mariposa estén detrás del texto
+canvas.style.zIndex = '-1';
 canvas.style.backgroundColor = '#000000';
 
 let burbujas = [];
@@ -21,16 +19,16 @@ function ajustarPantalla() {
 window.addEventListener('resize', ajustarPantalla);
 ajustarPantalla();
 
-// === CLASE BURBUJA (No tocar) ===
+// === CLASE BURBUJA ===
 class Burbuja {
     constructor(x, y, esInteractiva = false) {
         this.x = x;
         this.y = y;
-        this.radioMaximo = Math.random() * 40 + 10; 
+        this.radioMaximo = Math.random() * 35 + 10; 
         this.radio = esInteractiva ? 2 : Math.random() * this.radioMaximo;
         this.velocidadX = Math.random() * 2 - 1;
-        this.velocidadY = esInteractiva ? (Math.random() * -3 - 1) : (Math.random() * -1.5 - 0.5);
-        this.opacidad = Math.random() * 0.5 + 0.2;
+        this.velocidadY = esInteractiva ? (Math.random() * -3 - 1) : (Math.random() * -1.2 - 0.4);
+        this.opacidad = Math.random() * 0.4 + 0.15;
         this.explotando = false;
         this.radioExplosion = 0;
     }
@@ -40,12 +38,12 @@ class Burbuja {
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.radio, 0, Math.PI * 2);
             ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacidad})`;
-            ctx.lineWidth = 1.5;
+            ctx.lineWidth = 1.2;
             ctx.stroke();
 
             ctx.beginPath();
             ctx.arc(this.x - this.radio * 0.3, this.y - this.radio * 0.3, this.radio * 0.2, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${this.opacidad * 0.5})`;
+            ctx.fillStyle = `rgba(255, 255, 255, ${this.opacidad * 0.4})`;
             ctx.fill();
         } else {
             ctx.beginPath();
@@ -60,7 +58,7 @@ class Burbuja {
         if (!this.explotando) {
             this.x += this.velocidadX;
             this.y += this.velocidadY;
-            this.radio += 0.05;
+            this.radio += 0.04;
 
             if (this.radio >= this.radioMaximo || this.y + this.radio < 0) {
                 this.explotando = true;
@@ -72,98 +70,116 @@ class Burbuja {
 }
 
 function generarBurbujasDeFondo() {
-    if (burbujas.length < 50) {
+    if (burbujas.length < 40) {
         burbujas.push(new Burbuja(Math.random() * canvas.width, canvas.height + 20));
     }
 }
 
 window.addEventListener('mousemove', (evento) => {
-    if (Math.random() < 0.15) { 
+    if (Math.random() < 0.12) { 
         burbujas.push(new Burbuja(evento.clientX, evento.clientY, true));
     }
 });
 
 
-// === CLASE MARIPOSA (Ajustada para mayor tamaño y profundidad) ===
-class Mariposa {
+class Mariposa3D {
     constructor() {
         this.reiniciar();
     }
 
     reiniciar() {
-        // --- 1. AJUSTE DE TAMAÑO ---
-        // Aumentamos el rango de escala de [0.6 - 1.0] a [1.0 - 1.5] (Súper grande)
-        this.escala = Math.random() * 0.5 + 1.0; 
-
-        // Posición de inicio y velocidad (Sin cambios)
-        this.x = -150; // Empezamos un poco más afuera por su nuevo tamaño
-        this.y = Math.random() * (canvas.height * 0.6) + (canvas.height * 0.2);
-        this.velocidadX = Math.random() * 1.5 + 1.5;
+        
+        this.escala = Math.random() * 0.8 + 2.8; 
+        this.x = -200; 
+        
+        this.y = Math.random() * (canvas.height * 0.5) + (canvas.height * 0.2);
+        this.velocidadX = Math.random() * 1.2 + 1.4;
         this.anguloAleteo = 0;
         this.tiempoX = Math.random() * 100;
-        
-        // --- 2. EFECTO 3D (Simulación de profundidad) ---
-        // La opacidad dependerá de la escala: más grande = más "cerca" = más opaca
-        this.baseOpacidad = this.escala > 1.2 ? 0.9 : 0.6;
+        this.opacidad = this.escala > 3.2 ? 0.85 : 0.65;
     }
 
     actualizar() {
         this.x += this.velocidadX;
-        this.tiempoX += 0.05;
-        this.y += Math.sin(this.tiempoX) * 1.2; // Vuelo ondulado real
-        this.anguloAleteo += 0.25;
+        this.tiempoX += 0.04;
+        this.y += Math.sin(this.tiempoX) * 1.5; 
+        this.anguloAleteo += 0.22; 
 
-        // Reiniciar cuando cruza
-        if (this.x - 100 > canvas.width) {
+        if (this.x - 250 > canvas.width) {
             this.reiniciar();
         }
     }
 
     dibujar() {
         ctx.save();
+        
         ctx.translate(this.x, this.y);
         ctx.scale(this.escala, this.escala);
+        
+        
+        ctx.rotate(Math.sin(this.tiempoX) * 0.08);
 
-        // Ancho de ala dinámico para aleteo
-        let anchoAla = Math.abs(Math.sin(this.anguloAleteo)) * 25 + 5;
+        
+        let aleteoEfecto = Math.sin(this.anguloAleteo);
+        let anchoAlaIzquierda = (aleteoEfecto * 22) + 6;
+        let anchoAlaDerecha = (aleteoEfecto * 18) + 8; 
 
-        // --- 3. ESTILOS DE CRISTAL (Ajustados con la opacidad de profundidad) ---
-        ctx.strokeStyle = `rgba(255, 255, 255, ${this.baseOpacidad})`; // Bordes más nítidos
-        ctx.fillStyle = `rgba(255, 255, 255, ${this.baseOpacidad * 0.1})`; // Relleno de cristal
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacidad})`;
+        ctx.fillStyle = `rgba(255, 255, 255, 0.08)`;
+        ctx.lineWidth = 1.5;
 
-        // Ala Izquierda
+        
         ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.bezierCurveTo(-anchoAla, -30, -anchoAla * 1.5, -10, 0, 5);
-        ctx.bezierCurveTo(-anchoAla * 1.2, 15, -anchoAla, 25, 0, 10);
+        ctx.moveTo(0, -2);
+        ctx.bezierCurveTo(-anchoAlaIzquierda, -25, -anchoAlaIzquierda * 1.4, -8, 0, 2);
         ctx.fill();
         ctx.stroke();
 
-        // Ala Derecha
+        
         ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.bezierCurveTo(anchoAla, -30, anchoAla * 1.5, -10, 0, 5);
-        ctx.bezierCurveTo(anchoAla * 1.2, 15, anchoAla, 25, 0, 10);
+        ctx.moveTo(0, 2);
+        ctx.bezierCurveTo(-anchoAlaIzquierda * 1.1, 12, -anchoAlaIzquierda * 0.8, 20, 0, 8);
         ctx.fill();
         ctx.stroke();
 
-        // Cuerpo (Más nítido)
+        
         ctx.beginPath();
-        ctx.moveTo(0, -15);
-        ctx.lineTo(0, 15);
-        ctx.strokeStyle = `rgba(255, 255, 255, ${this.baseOpacidad * 1.1})`; // Un toque más brillante
-        ctx.lineWidth = 3;
+        ctx.moveTo(0, -2);
+        ctx.bezierCurveTo(anchoAlaDerecha, -25, anchoAlaDerecha * 1.4, -8, 0, 2);
+        ctx.fill();
+        ctx.stroke();
+
+       
+        ctx.beginPath();
+        ctx.moveTo(0, 2);
+        ctx.bezierCurveTo(anchoAlaDerecha * 1.1, 12, anchoAlaDerecha * 0.8, 20, 0, 8);
+        ctx.fill();
+        ctx.stroke();
+
+       
+        ctx.beginPath();
+        ctx.moveTo(-1, -12);
+        ctx.quadraticCurveTo(-4, -18, -6, -20);
+        ctx.moveTo(1, -12);
+        ctx.quadraticCurveTo(4, -18, 6, -20);
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+
+        
+        ctx.beginPath();
+        ctx.moveTo(0, -12);
+        ctx.lineTo(0, 10);
+        ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacidad + 0.1})`;
+        ctx.lineWidth = 2.5;
         ctx.stroke();
 
         ctx.restore();
     }
 }
 
-const mariposa = new Mariposa();
+const mariposa = new Mariposa3D();
 
 
-// === BUCLE DE ANIMACIÓN (No tocar) ===
 function animar() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
