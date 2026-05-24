@@ -12,8 +12,8 @@ header {
     padding: 20px 50px;
     font-size: 24px;
     font-weight: bold;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
     position: fixed;
     width: 100%;
     top: 0;
@@ -24,16 +24,16 @@ header {
 
 
 .presentacion {
-    max-width: 550px !important; 
+    max-width: 520px !important; 
     margin: 160px 0 50px 6% !important; 
     padding: 0 20px;
     text-align: left !important;
     position: relative;
-    z-index: 5;
+    z-index: 5; 
 }
 
 .titulo-gradiente {
-    font-size: 54px;
+    font-size: 50px;
     line-height: 1.1;
     margin-bottom: 25px;
     font-weight: 800;
@@ -55,7 +55,6 @@ header {
 .descripcion strong {
     color: #78ffd6;
 }
-
 
 .botones {
     display: flex;
